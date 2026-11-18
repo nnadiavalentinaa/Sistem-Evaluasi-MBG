@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login | Sistem Evaluasi MBG</title>
+<style>
+  :root {
+    --bg:#eef4f1; --card:#fff; --ink:#1b2622; --muted:#5f6f69; --line:#d5dfda;
+    --pine:#14332a; --accent:#f2b84b; --accent-dark:#e0a02a; --soft:#eef4f1;
+    --error:#b3261e; --error-bg:#fdecea;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#0e1a16; --card:#16261f; --ink:#e8f1ed; --muted:#9db3aa; --line:#2c423a;
+      --soft:#1d3229; --error:#ff8a80; --error-bg:#3a1c1a; color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e1a16; --card:#16261f; --ink:#e8f1ed; --muted:#9db3aa; --line:#2c423a;
+    --soft:#1d3229; --error:#ff8a80; --error-bg:#3a1c1a; color-scheme:dark;
+  }
+  html { scroll-padding-top:env(safe-area-inset-top,0px); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:20px 16px;
+  }
+  [hidden] { display:none !important; }
+
+  .wrap { width:100%; max-width:420px; }
+  .brand { text-align:center; margin-bottom:20px; }
+  .brand .logo { font-size:3rem; line-height:1; }
+  .brand h1 { font-size:1.5rem; margin-top:6px; }
+  .brand p { color:var(--muted); font-size:.95rem; }
+
+  .card {
+    background:var(--card); border-radius:16px; padding:28px 24px;
+    border-top:6px solid var(--accent);
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+  }
+  .card h2 { font-size:1.2rem; margin-bottom:18px; }
+
+  label { display:block; font-weight:600; font-size:.92rem; margin-bottom:6px; }
+  .field { margin-bottom:16px; position:relative; }
+  input {
+    width:100%; padding:12px 14px; font:inherit; font-size:1rem;
+    color:var(--ink); background:var(--card);
+    border:1.5px solid var(--line); border-radius:10px;
+  }
+  input:focus { outline:3px solid rgba(242,184,75,.5); border-color:var(--accent-dark); }
+  input.invalid { border-color:var(--error); }
+  #password { padding-right:96px; }
+  .toggle {
+    position:absolute; right:6px; bottom:6px; padding:7px 10px;
+    background:none; border:0; font:inherit; font-size:.85rem; font-weight:700;
+    color:var(--muted); cursor:pointer; border-radius:8px;
+  }
+
+  .error {
+    background:var(--error-bg); color:var(--error); border-radius:10px;
+    padding:10px 14px; margin-bottom:16px; font-size:.92rem; font-weight:600;
+  }
+  .btn {
+    width:100%; padding:13px; font:inherit; font-size:1.05rem; font-weight:800;
+    color:#14332a; background:var(--accent); border:0; border-radius:10px; cursor:pointer;
+  }
+  .btn:hover { background:#f5c15f; }
+
+  .demo { margin-top:16px; padding:14px; border:1.5px dashed var(--line); border-radius:14px; }
+  .demo p { font-weight:700; font-size:.9rem; margin-bottom:8px; }
+  .demo small { color:var(--muted); font-size:.8rem; }
+  .row {
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    width:100%; padding:10px 12px; margin-bottom:6px; font:inherit; font-size:.9rem;
+    color:var(--ink); background:var(--soft); border:0; border-radius:10px; cursor:pointer; text-align:left;
+  }
+  .row b { min-width:56px; }
+  .row span { font-family:Consolas,monospace; color:var(--muted); word-break:break-all; text-align:right; }
+
+  /* Halaman setelah login */
+  .app { width:100%; max-width:560px; text-align:center; }
+  .app h1 { font-size:1.5rem; margin-bottom:6px; }
+  .app p { color:var(--muted); margin-bottom:20px; }
+  .app .btn { width:auto; padding:10px 28px; }
+
+  @media (min-width:700px) {
+    .card { padding:36px 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="viewLogin">
+  <div class="brand">
+    <div class="logo">🍱</div>
+    <h1>Sistem Evaluasi MBG</h1>
+    <p>Program Makan Bergizi Gratis</p>
+  </div>
+
+  <form class="card" id="form" novalidate>
+    <h2>Masuk ke akun Anda</h2>
+    <div class="error" id="error" role="alert" hidden></div>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" type="text" autocomplete="username" placeholder="Masukkan username">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password">
+      <button type="button" class="toggle" id="toggle">Tampilkan</button>
+    </div>
+
+    <button type="submit" class="btn">Masuk</button>
+  </form>
+
+  <div class="demo">
+    <p>Akun contoh <small>(klik untuk mengisi otomatis)</small></p>
+    <button type="button" class="row" data-u="siswa01" data-p="siswa123"><b>Siswa</b><span>siswa01 / siswa123</span></button>
+    <button type="button" class="row" data-u="guru01" data-p="guru123"><b>Guru</b><span>guru01 / guru123</span></button>
+    <button type="button" class="row" data-u="admin" data-p="admin123"><b>Admin</b><span>admin / admin123</span></button>
+  </div>
+</div>
+
+<div class="app" id="viewApp" hidden>
+  <h1 id="judul"></h1>
+  <p id="desk"></p>
+  <button type="button" class="btn" id="logout">Keluar</button>
+</div>
+
+<script>
+  // Akun demo saja. Sistem asli: verifikasi di server + password di-hash.
+  const AKUN = [
+    { u:"siswa01", p:"siswa123", role:"siswa" },
+    { u:"guru01",  p:"guru123",  role:"guru"  },
+    { u:"admin",   p:"admin123", role:"admin" }
+  ];
+  const HALAMAN = {
+    siswa:{ judul:"Halaman Evaluasi Siswa", desk:"Halaman ini akan berisi form penilaian MBG untuk siswa." },
+    guru: { judul:"Halaman Evaluasi Guru",  desk:"Halaman ini akan berisi form hasil pengamatan MBG untuk guru." },
+    admin:{ judul:"Dashboard Admin",        desk:"Halaman ini akan berisi ringkasan hasil evaluasi untuk admin SPPG." }
+  };
+
+  const $ = id => document.getElementById(id);
+  const user = $("username"), pass = $("password"), err = $("error");
+
+  function simpan(v){ try { sessionStorage.setItem("sesiMBG", v); } catch(e){} }
+  function hapus(){ try { sessionStorage.removeItem("sesiMBG"); } catch(e){} }
+  function baca(){ try { return sessionStorage.getItem("sesiMBG"); } catch(e){ return null; } }
+
+  function error(msg, ...f){
+    err.textContent = msg; err.hidden = false;
+    [user, pass].forEach(x => x.classList.remove("invalid"));
+    f.forEach(x => x.classList.add("invalid"));
+  }
+  function bersih(){ err.hidden = true; [user, pass].forEach(x => x.classList.remove("invalid")); }
+
+  function tampilApp(role){
+    $("judul").textContent = HALAMAN[role].judul;
+    $("desk").textContent = HALAMAN[role].desk;
+    $("viewLogin").hidden = true; $("viewApp").hidden = false;
+  }
+
+  document.querySelectorAll(".row").forEach(b => b.addEventListener("click", () => {
+    user.value = b.dataset.u; pass.value = b.dataset.p; bersih();
+  }));
+
+  $("toggle").addEventListener("click", () => {
+    const sembunyi = pass.type === "password";
+    pass.type = sembunyi ? "text" : "password";
+    $("toggle").textContent = sembunyi ? "Sembunyikan" : "Tampilkan";
+  });
+
+  $("form").addEventListener("submit", e => {
+    e.preventDefault();
+    const u = user.value.trim(), p = pass.value;
+    if (!u && !p) return error("Username dan password wajib diisi.", user, pass);
+    if (!u) return error("Username wajib diisi.", user);
+    if (!p) return error("Password wajib diisi.", pass);
+    const akun = AKUN.find(a => a.u === u && a.p === p);
+    if (!akun) { error("Username atau password salah.", user, pass); pass.value = ""; return; }
+    simpan(akun.role);
+    tampilApp(akun.role);
+  });
+
+  $("logout").addEventListener("click", () => {
+    hapus();
+    $("form").reset(); bersih();
+    $("viewApp").hidden = true; $("viewLogin").hidden = false;
+  });
+
+  const sesi = baca();
+  if (sesi && HALAMAN[sesi]) tampilApp(sesi);
+</script>
+</body>
+</html>
